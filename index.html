@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mklr.ai | Vastgoed x AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['"SFMono-Regular"', 'Menlo', 'monospace'],
+          },
+          colors: {
+            'slate-950': '#0b1021',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root {
+      --ai-gradient: linear-gradient(120deg, #3cfbff, #8b5cf6, #0ea5e9);
+    }
+    .gradient-text {
+      background: var(--ai-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(16px);
+    }
+    .pulse {
+      position: relative;
+      overflow: hidden;
+    }
+    .pulse::before {
+      content: '';
+      position: absolute;
+      inset: -50%;
+      background: radial-gradient(circle at 30% 30%, rgba(60, 251, 255, 0.2), transparent 45%),
+                  radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.3), transparent 40%),
+                  radial-gradient(circle at 50% 80%, rgba(14, 165, 233, 0.25), transparent 45%);
+      filter: blur(40px);
+      animation: pulse 8s ease-in-out infinite;
+      transform-origin: center;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.9; }
+    }
+    .glow-hover {
+      transition: transform 250ms ease, box-shadow 250ms ease, border-color 250ms ease, opacity 250ms ease;
+    }
+    .glow-hover:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 20px 50px rgba(56, 189, 248, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+    <div class="absolute -top-40 -left-32 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute top-10 right-0 w-[28rem] h-[28rem] bg-purple-500/10 rounded-full blur-[120px]"></div>
+  </div>
+
+  <header class="relative z-10">
+    <nav class="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="text-lg font-extrabold font-mono gradient-text">mklr.ai</div>
+      </div>
+      <div class="hidden md:flex items-center gap-8 text-sm text-slate-200">
+        <a class="hover:text-white transition" href="#tech">Technologie</a>
+        <a class="hover:text-white transition" href="#kansen">Kansen</a>
+        <a class="hover:text-white transition" href="#over">Over ons</a>
+      </div>
+      <div class="hidden md:block">
+        <a href="#analyse" class="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-slate-900 bg-gradient-to-r from-cyan-400 via-purple-500 to-blue-500 shadow-lg shadow-cyan-500/20 hover:scale-[1.02] transition">
+          Start Analyse
+        </a>
+      </div>
+      <button class="md:hidden glass glow-hover rounded-full px-3 py-2" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </nav>
+  </header>
+
+  <main class="relative z-10">
+    <section class="max-w-6xl mx-auto px-6 pt-8 pb-16 md:pt-12 grid md:grid-cols-2 gap-10 items-center">
+      <div class="space-y-6">
+        <div class="inline-flex items-center gap-2 glass rounded-full px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-300">
+          <span class="h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
+          Real-time marktscanner
+        </div>
+        <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">
+          Vastgoedkennis <span class="gradient-text">ontmoet</span> Kunstmatige Intelligentie.
+        </h1>
+        <p class="text-lg text-slate-300">
+          mklr.ai combineert 20 jaar marktervaring met geavanceerde algoritmes om vastgoedkansen te vinden die anderen missen.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a id="cta" href="#kansen" class="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-slate-900 bg-gradient-to-r from-cyan-400 via-purple-500 to-blue-500 shadow-lg shadow-cyan-500/25 glow-hover">
+            Ontdek Kansen
+          </a>
+          <a href="#tech" class="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-slate-100 glass glow-hover">
+            Hoe het werkt
+          </a>
+        </div>
+        <div class="flex flex-wrap gap-4 text-sm text-slate-400">
+          <div class="flex items-center gap-2 glass rounded-full px-3 py-1 glow-hover">
+            <span class="h-2 w-2 rounded-full bg-cyan-400"></span>24/7 Marktscan
+          </div>
+          <div class="flex items-center gap-2 glass rounded-full px-3 py-1 glow-hover">
+            <span class="h-2 w-2 rounded-full bg-purple-400"></span>20+ Jaar Data
+          </div>
+          <div class="flex items-center gap-2 glass rounded-full px-3 py-1 glow-hover">
+            <span class="h-2 w-2 rounded-full bg-blue-400"></span>Real-time Waarderingen
+          </div>
+        </div>
+      </div>
+      <div class="relative">
+        <div class="glass pulse rounded-3xl h-[360px] md:h-[420px] overflow-hidden glow-hover">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="relative w-64 h-64">
+              <div class="absolute inset-6 rounded-full border border-cyan-400/30 blur-sm"></div>
+              <div class="absolute inset-3 rounded-full border border-purple-500/40 blur-[1px] rotate-6"></div>
+              <div class="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/30 via-purple-500/30 to-blue-500/30 blur-2xl"></div>
+              <div class="absolute inset-10 bg-slate-900/80 rounded-full flex items-center justify-center text-center text-sm text-slate-200 p-6">
+                Data-gedreven heatmap<br />AI scoring &amp; matching
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-slate-900/40 border-y border-white/5">
+      <div class="max-w-6xl mx-auto px-6 py-6 flex flex-col sm:flex-row gap-4 sm:gap-6 text-sm text-slate-200">
+        <div class="flex-1 glass glow-hover rounded-2xl px-4 py-3 flex items-center gap-2">
+          <span class="h-2 w-2 rounded-full bg-green-400"></span>24/7 Marktscan
+        </div>
+        <div class="flex-1 glass glow-hover rounded-2xl px-4 py-3 flex items-center gap-2">
+          <span class="h-2 w-2 rounded-full bg-purple-400"></span>20+ Jaar Data
+        </div>
+        <div class="flex-1 glass glow-hover rounded-2xl px-4 py-3 flex items-center gap-2">
+          <span class="h-2 w-2 rounded-full bg-blue-400"></span>Real-time Waarderingen
+        </div>
+      </div>
+    </section>
+
+    <section id="tech" class="max-w-6xl mx-auto px-6 py-16 space-y-10">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div>
+          <p class="text-sm uppercase tracking-[0.2em] text-slate-400">Technologie</p>
+          <h2 class="text-3xl md:text-4xl font-bold mt-2 gradient-text">De mklr.ai technologie</h2>
+          <p class="text-slate-300 mt-3 max-w-2xl">Geavanceerde modellen en realtime data pipelines combineren historische vastgoedexpertise met de snelheid van AI.</p>
+        </div>
+        <a href="#cta" class="inline-flex items-center gap-2 text-sm font-semibold text-cyan-300 hover:text-cyan-100 transition">
+          Plan een demo
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+      <div id="kansen" class="grid grid-cols-1 md:grid-cols-6 gap-5">
+        <div class="md:col-span-3 lg:col-span-4 glass glow-hover rounded-3xl p-6 flex flex-col justify-between min-h-[240px]">
+          <div class="flex items-center gap-3 text-sm text-cyan-200">
+            <span class="h-2 w-2 rounded-full bg-cyan-400"></span>Predictieve Analyse
+          </div>
+          <div class="mt-4 space-y-4">
+            <h3 class="text-2xl font-semibold text-white">We voorspellen waardestijgingen voordat ze gebeuren.</h3>
+            <p class="text-slate-300">Machine learning-modellen detecteren vroege signalen in transactie- en omgevingsdata. Visualiseer heatmaps die vooruitlopen op de markt.</p>
+          </div>
+          <div class="mt-6 flex gap-3">
+            <span class="glass rounded-full px-3 py-1 text-xs text-slate-200">Time-series AI</span>
+            <span class="glass rounded-full px-3 py-1 text-xs text-slate-200">Early indicators</span>
+          </div>
+        </div>
+        <div class="md:col-span-3 lg:col-span-2 glass glow-hover rounded-3xl p-6 flex flex-col gap-4 min-h-[240px]">
+          <div class="flex items-center gap-3 text-sm text-purple-200">
+            <span class="h-2 w-2 rounded-full bg-purple-400"></span>Smart Matching
+          </div>
+          <h3 class="text-xl font-semibold text-white">Het juiste pand bij de juiste investeerder.</h3>
+          <p class="text-slate-300">Matchscore op basis van rendement, risico en voorkeuren. AI adviseert direct passende deals.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="glass rounded-full px-3 py-1 text-xs text-slate-200">Matchscore</span>
+            <span class="glass rounded-full px-3 py-1 text-xs text-slate-200">Profiel fit</span>
+          </div>
+        </div>
+        <div class="md:col-span-2 glass glow-hover rounded-3xl p-6 flex flex-col gap-4 min-h-[220px]">
+          <div class="flex items-center gap-3 text-sm text-blue-200">
+            <span class="h-2 w-2 rounded-full bg-blue-400"></span>Verborgen Parels
+          </div>
+          <h3 class="text-xl font-semibold text-white">Off-market kansen gedetecteerd door AI.</h3>
+          <p class="text-slate-300">Natural language modellen scrapen signalen uit nieuws, vergunningen en listings.</p>
+        </div>
+        <div class="md:col-span-2 glass glow-hover rounded-3xl p-6 flex flex-col gap-4 min-h-[220px]">
+          <div class="flex items-center gap-3 text-sm text-emerald-200">
+            <span class="h-2 w-2 rounded-full bg-emerald-400"></span>Automatische Due Diligence
+          </div>
+          <h3 class="text-xl font-semibold text-white">Risicoanalyses in seconden.</h3>
+          <p class="text-slate-300">Automatische checks op rendement, risico's en ESG-compliance, mét heldere verklaringen.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="over" class="max-w-6xl mx-auto px-6 pb-16">
+      <div class="glass rounded-3xl p-8 md:p-10 glow-hover flex flex-col md:flex-row gap-8 items-center">
+        <div class="flex-1 space-y-4">
+          <p class="text-sm uppercase tracking-[0.2em] text-slate-400">Mens + Machine</p>
+          <h3 class="text-3xl font-bold text-white">Menselijke expertise, AI snelheid.</h3>
+          <p class="text-slate-300">Onze algoritmes zijn gebouwd op decennia aan vastgoedervaring. Analisten, asset managers en data scientists werken samen in één platform zodat elke aanbeveling traceerbaar en uitlegbaar blijft.</p>
+          <div class="flex flex-wrap gap-3 text-sm text-slate-200">
+            <span class="glass rounded-full px-3 py-1 glow-hover">Senior analisten</span>
+            <span class="glass rounded-full px-3 py-1 glow-hover">Explainable AI</span>
+            <span class="glass rounded-full px-3 py-1 glow-hover">Compliance-ready</span>
+          </div>
+        </div>
+        <div class="flex-1">
+          <div class="relative glass rounded-3xl p-6 h-full glow-hover">
+            <div class="absolute inset-0 opacity-30 pulse"></div>
+            <div class="relative space-y-4">
+              <h4 class="text-xl font-semibold text-white">Transparant &amp; uitlegbaar</h4>
+              <p class="text-slate-200">Elke score komt met een duidelijke motivatie. Bekijk de belangrijkste drivers, scenario's en risico's direct in het dashboard.</p>
+              <div class="grid grid-cols-2 gap-3 text-sm">
+                <div class="glass rounded-2xl px-3 py-3">
+                  <div class="text-slate-400">Beoordelingen</div>
+                  <div class="text-white font-semibold">Real-time</div>
+                </div>
+                <div class="glass rounded-2xl px-3 py-3">
+                  <div class="text-slate-400">Datasets</div>
+                  <div class="text-white font-semibold">20+ jaar</div>
+                </div>
+                <div class="glass rounded-2xl px-3 py-3">
+                  <div class="text-slate-400">Respond</div>
+                  <div class="text-white font-semibold">Sec. niveau</div>
+                </div>
+                <div class="glass rounded-2xl px-3 py-3">
+                  <div class="text-slate-400">Portfolio</div>
+                  <div class="text-white font-semibold">Direct inzicht</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section id="analyse" class="max-w-6xl mx-auto px-6 pb-16">
+    <div class="glass rounded-3xl p-8 md:p-10 glow-hover space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <p class="text-sm uppercase tracking-[0.2em] text-slate-400">Start analyse</p>
+          <h3 class="text-3xl font-bold text-white">Plan je vastgoed- en AI-analyse</h3>
+          <p class="text-slate-300 mt-2">Vul de gegevens in en stuur via je eigen mailclient. Je houdt controle en ziet de verzending volledig.</p>
+        </div>
+        <a href="#cta" class="inline-flex items-center gap-2 text-sm font-semibold text-cyan-300 hover:text-cyan-100 transition">
+          Terug naar boven
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+          </svg>
+        </a>
+      </div>
+      <form class="grid grid-cols-1 md:grid-cols-2 gap-4" action="mailto:info@21000000.nl" method="post" enctype="text/plain">
+        <label class="flex flex-col gap-2 text-sm text-slate-200">
+          Naam
+          <input type="text" name="Naam" required class="glass glow-hover rounded-xl px-4 py-3 bg-slate-900/40 focus:outline-none focus:ring-2 focus:ring-cyan-400/60" placeholder="Voor- en achternaam" />
+        </label>
+        <label class="flex flex-col gap-2 text-sm text-slate-200">
+          E-mail
+          <input type="email" name="Email" required class="glass glow-hover rounded-xl px-4 py-3 bg-slate-900/40 focus:outline-none focus:ring-2 focus:ring-cyan-400/60" placeholder="naam@bedrijf.nl" />
+        </label>
+        <label class="flex flex-col gap-2 text-sm text-slate-200">
+          Telefoon
+          <input type="tel" name="Telefoon" class="glass glow-hover rounded-xl px-4 py-3 bg-slate-900/40 focus:outline-none focus:ring-2 focus:ring-cyan-400/60" placeholder="+31 6 12345678" />
+        </label>
+        <label class="flex flex-col gap-2 text-sm text-slate-200">
+          Doel
+          <select name="Doel" class="glass glow-hover rounded-xl px-4 py-3 bg-slate-900/60 focus:outline-none focus:ring-2 focus:ring-cyan-400/60">
+            <option>Beleggen</option>
+            <option>Ontwikkelen</option>
+            <option>Portfolio optimaliseren</option>
+            <option>Due diligence</option>
+            <option>Anders</option>
+          </select>
+        </label>
+        <label class="flex flex-col gap-2 text-sm text-slate-200 md:col-span-2">
+          Regio / Markt
+          <input type="text" name="Regio" class="glass glow-hover rounded-xl px-4 py-3 bg-slate-900/40 focus:outline-none focus:ring-2 focus:ring-cyan-400/60" placeholder="Bijv. Randstad, Brabant, Vlaanderen" />
+        </label>
+        <label class="flex flex-col gap-2 text-sm text-slate-200">
+          Budget
+          <input type="text" name="Budget" class="glass glow-hover rounded-xl px-4 py-3 bg-slate-900/40 focus:outline-none focus:ring-2 focus:ring-cyan-400/60" placeholder="Bijv. €2-5M" />
+        </label>
+        <label class="flex flex-col gap-2 text-sm text-slate-200">
+          Asset type
+          <input type="text" name="Asset type" class="glass glow-hover rounded-xl px-4 py-3 bg-slate-900/40 focus:outline-none focus:ring-2 focus:ring-cyan-400/60" placeholder="Woningen, kantoren, mixed-use" />
+        </label>
+        <label class="flex flex-col gap-2 text-sm text-slate-200 md:col-span-2">
+          Vraag / Context
+          <textarea name="Vraag" rows="4" class="glass glow-hover rounded-xl px-4 py-3 bg-slate-900/40 focus:outline-none focus:ring-2 focus:ring-cyan-400/60" placeholder="Beschrijf je case, timings, gewenste rendementen..."></textarea>
+        </label>
+        <div class="md:col-span-2 flex flex-col gap-3">
+          <button type="submit" class="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-slate-900 bg-gradient-to-r from-cyan-400 via-purple-500 to-blue-500 shadow-lg shadow-cyan-500/25 glow-hover">
+            Verstuur
+          </button>
+          <p class="text-xs text-slate-400">Verzending opent je mailprogramma met de gegevens; controleren en verzenden gebeurt zichtbaar door jou.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <footer class="border-t border-white/5 bg-slate-950/60">
+    <div class="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row gap-6 md:items-center md:justify-between">
+      <div>
+        <div class="font-mono font-bold gradient-text text-lg">mklr.ai</div>
+        <p class="text-slate-400 text-sm mt-2">Kansen in vastgoed, aangedreven door AI.</p>
+      </div>
+      <div class="flex items-center gap-6 text-slate-200 text-sm">
+        <a class="hover:text-white transition" href="#tech">Technologie</a>
+        <a class="hover:text-white transition" href="#kansen">Kansen</a>
+        <a class="hover:text-white transition" href="#over">Over ons</a>
+      </div>
+      <div class="flex items-center gap-4 text-slate-300">
+        <a class="glass glow-hover rounded-full p-2" href="#" aria-label="LinkedIn">
+          <i data-lucide="linkedin" class="w-5 h-5"></i>
+        </a>
+        <a class="glass glow-hover rounded-full p-2" href="#" aria-label="Twitter">
+          <i data-lucide="twitter" class="w-5 h-5"></i>
+        </a>
+        <a class="glass glow-hover rounded-full p-2" href="#" aria-label="Mail">
+          <i data-lucide="mail" class="w-5 h-5"></i>
+        </a>
+      </div>
+    </div>
+    <div class="max-w-6xl mx-auto px-6 pb-8 text-slate-500 text-xs">
+      © 2024 mklr.ai. Alle rechten voorbehouden.
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
+
