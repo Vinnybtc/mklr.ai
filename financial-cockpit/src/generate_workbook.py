@@ -38,6 +38,7 @@ from model_config import (
     SAMPLE_DATA,
     DATA_VALIDATIONS,
     COLORS,
+    BOX3_TARIEVEN_2025,
 )
 from excel_builder import (
     create_named_styles,
@@ -90,6 +91,9 @@ class FinancialCockpitGenerator:
         self._build_leningen_sheet()
         self._build_btc_onderpand_sheet()
         self._build_cash_sheet()
+        self._build_inkomsten_sheet()
+        self._build_maandlasten_sheet()
+        self._build_belastingen_sheet()
         self._build_alerts_sheet()
         self._build_dashboard_sheet()
 
@@ -765,6 +769,284 @@ De berekeningen en alerts werken dan nog steeds correct.
         freeze_panes(ws, row=4, col=1)
 
     # =========================================================================
+    # INKOMSTEN (Income) Sheet
+    # =========================================================================
+
+    def _build_inkomsten_sheet(self) -> None:
+        """Build the Income sheet."""
+        ws = self.sheets["Inkomsten"]
+
+        add_sheet_title(ws, "Inkomsten - Overzicht", row=1, col=1)
+
+        # Income table
+        inkomsten_cols = ["Bron", "Omschrijving", "Bruto/maand", "Netto/maand", "Type", "Frequentie", "Opmerking"]
+        inkomsten_data = SAMPLE_DATA.get("tblInkomsten", [])
+
+        create_excel_table(
+            ws,
+            table_name="tblInkomsten",
+            columns=inkomsten_cols,
+            start_row=3,
+            start_col=1,
+            data=inkomsten_data,
+            num_empty_rows=10,
+        )
+
+        # Data validations
+        add_dropdown_validation(ws, "income_type", "E4:E50")
+        add_dropdown_validation(ws, "frequentie", "F4:F50")
+
+        # Number formats
+        for row in range(4, 50):
+            ws.cell(row=row, column=3).number_format = '€ #,##0.00'  # Bruto
+            ws.cell(row=row, column=4).number_format = '€ #,##0.00'  # Netto
+
+        # Summary section
+        summary_row = 2
+        ws.cell(row=summary_row, column=9, value="Totaal Bruto/maand:")
+        ws.cell(row=summary_row, column=9).font = Font(bold=True)
+        ws.cell(row=summary_row, column=10, value="=SUM(tblInkomsten[Bruto/maand])")
+        ws.cell(row=summary_row, column=10).number_format = '€ #,##0.00'
+        ws.cell(row=summary_row, column=10).font = Font(bold=True)
+
+        ws.cell(row=summary_row + 1, column=9, value="Totaal Netto/maand:")
+        ws.cell(row=summary_row + 1, column=9).font = Font(bold=True)
+        ws.cell(row=summary_row + 1, column=10, value="=SUM(tblInkomsten[Netto/maand])")
+        ws.cell(row=summary_row + 1, column=10).number_format = '€ #,##0.00'
+        ws.cell(row=summary_row + 1, column=10).font = Font(bold=True, color="006600")
+
+        ws.cell(row=summary_row + 3, column=9, value="Jaarlijks Netto:")
+        ws.cell(row=summary_row + 3, column=10, value="=J3*12")
+        ws.cell(row=summary_row + 3, column=10).number_format = '€ #,##0'
+
+        # Column widths
+        set_column_widths(ws, {
+            1: 15,  # Bron
+            2: 25,  # Omschrijving
+            3: 14,  # Bruto
+            4: 14,  # Netto
+            5: 12,  # Type
+            6: 12,  # Frequentie
+            7: 25,  # Opmerking
+            8: 3,   # Spacer
+            9: 18,  # Label
+            10: 14, # Value
+        })
+
+        freeze_panes(ws, row=4, col=1)
+
+    # =========================================================================
+    # MAANDLASTEN (Monthly Expenses) Sheet
+    # =========================================================================
+
+    def _build_maandlasten_sheet(self) -> None:
+        """Build the Monthly Expenses sheet."""
+        ws = self.sheets["Maandlasten"]
+
+        add_sheet_title(ws, "Maandlasten - Vaste Uitgaven", row=1, col=1)
+
+        # Expenses table
+        lasten_cols = ["Categorie", "Omschrijving", "Bedrag(EUR)", "Frequentie", "Jaarlijks(EUR)", "Opmerking"]
+        lasten_data = SAMPLE_DATA.get("tblMaandlasten", [])
+
+        create_excel_table(
+            ws,
+            table_name="tblMaandlasten",
+            columns=lasten_cols,
+            start_row=3,
+            start_col=1,
+            data=lasten_data,
+            num_empty_rows=15,
+        )
+
+        # Data validations
+        add_dropdown_validation(ws, "lasten_categorie", "A4:A50")
+        add_dropdown_validation(ws, "frequentie", "D4:D50")
+
+        # Add formula for Jaarlijks column
+        for row in range(4, 50):
+            ws.cell(row=row, column=5, value=(
+                f'=IF(C{row}="","",IF(D{row}="Maandelijks",C{row}*12,'
+                f'IF(D{row}="Kwartaal",C{row}*4,'
+                f'IF(D{row}="Jaarlijks",C{row},C{row}))))'
+            ))
+
+        # Number formats
+        for row in range(4, 50):
+            ws.cell(row=row, column=3).number_format = '€ #,##0.00'  # Bedrag
+            ws.cell(row=row, column=5).number_format = '€ #,##0.00'  # Jaarlijks
+
+        # Summary section
+        summary_row = 2
+        ws.cell(row=summary_row, column=8, value="Totaal/maand:")
+        ws.cell(row=summary_row, column=8).font = Font(bold=True)
+        ws.cell(row=summary_row, column=9, value="=SUM(tblMaandlasten[Bedrag(EUR)])")
+        ws.cell(row=summary_row, column=9).number_format = '€ #,##0.00'
+        ws.cell(row=summary_row, column=9).font = Font(bold=True, color="CC0000")
+
+        ws.cell(row=summary_row + 1, column=8, value="Totaal/jaar:")
+        ws.cell(row=summary_row + 1, column=9, value="=SUM(tblMaandlasten[Jaarlijks(EUR)])")
+        ws.cell(row=summary_row + 1, column=9).number_format = '€ #,##0'
+
+        # Category subtotals
+        ws.cell(row=summary_row + 3, column=8, value="Per categorie:")
+        ws.cell(row=summary_row + 3, column=8).font = Font(bold=True)
+
+        categories = ["Wonen", "Verzekering", "Vervoer", "Abonnement", "Levensonderhoud", "Overig"]
+        for i, cat in enumerate(categories):
+            ws.cell(row=summary_row + 4 + i, column=8, value=cat)
+            ws.cell(row=summary_row + 4 + i, column=9, value=f'=SUMIF(tblMaandlasten[Categorie],"{cat}",tblMaandlasten[Bedrag(EUR)])')
+            ws.cell(row=summary_row + 4 + i, column=9).number_format = '€ #,##0.00'
+
+        # Column widths
+        set_column_widths(ws, {
+            1: 15,  # Categorie
+            2: 25,  # Omschrijving
+            3: 14,  # Bedrag
+            4: 12,  # Frequentie
+            5: 14,  # Jaarlijks
+            6: 25,  # Opmerking
+            7: 3,   # Spacer
+            8: 18,  # Label
+            9: 14,  # Value
+        })
+
+        freeze_panes(ws, row=4, col=1)
+
+    # =========================================================================
+    # BELASTINGEN (Taxes - Box 3) Sheet
+    # =========================================================================
+
+    def _build_belastingen_sheet(self) -> None:
+        """Build the Tax calculation sheet (Box 3 - Netherlands)."""
+        ws = self.sheets["Belastingen"]
+
+        add_sheet_title(ws, "Belastingen - Box 3 Vermogensbelasting (NL)", row=1, col=1)
+
+        # Info text
+        ws.cell(row=2, column=1, value="Peildatum: 1 januari | Tarieven 2025 | Heffingsvrij vermogen: €57.684 p.p.")
+        ws.cell(row=2, column=1).font = Font(italic=True, color="666666")
+
+        # Box 3 calculation table
+        headers = ["Vermogenstype", "Waarde 1 jan", "Forfaitair %", "Fictief rendement", "Opmerking"]
+        for col_idx, header in enumerate(headers, start=1):
+            cell = ws.cell(row=4, column=col_idx, value=header)
+            cell.style = "header_style"
+
+        # Pre-filled categories with formulas
+        vermogen_items = [
+            ("Spaargeld", "=SUM(tblCash[Bedrag(EUR)])", "0.92%", "spaar"),
+            ("Beleggingen (excl. crypto)", '=SUMIF(tblCash[Type],"Belegging",tblCash[Bedrag(EUR)])', "6.17%", "beleg"),
+            ("Crypto (BTC + DOGE)", '=SUM(tblBTC[BTC Aantal])*XLOOKUP("BTC",tblKoersen[Symbol],tblKoersen[EUR prijs],0)+SUM(tblDOGE[DOGE Aantal])*XLOOKUP("DOGE",tblKoersen[Symbol],tblKoersen[EUR prijs],0)', "6.17%", "beleg"),
+            ("Vastgoed (WOZ-waarde)", "=SUM(tblVastgoed[Waarde(EUR)])", "6.17%", "Let op: eigen woning in Box 1"),
+            ("Schulden (aftrekbaar)", "=-SUM(tblLeningen[Openstaand(EUR)])-SUM(tblVastgoed[Hypotheek(EUR)])-SUM(tblVastgoed[Overige Leningen(EUR)])", "2.57%", "Drempel €3.700"),
+        ]
+
+        row = 5
+        for item_name, waarde_formula, forfait, opmerking in vermogen_items:
+            ws.cell(row=row, column=1, value=item_name)
+            ws.cell(row=row, column=2, value=waarde_formula)
+            ws.cell(row=row, column=2).number_format = '€ #,##0'
+
+            if forfait == "0.92%":
+                ws.cell(row=row, column=3, value=0.0092)
+            elif forfait == "6.17%":
+                ws.cell(row=row, column=3, value=0.0617)
+            elif forfait == "2.57%":
+                ws.cell(row=row, column=3, value=0.0257)
+            ws.cell(row=row, column=3).number_format = '0.00%'
+
+            # Fictief rendement
+            ws.cell(row=row, column=4, value=f'=B{row}*C{row}')
+            ws.cell(row=row, column=4).number_format = '€ #,##0'
+
+            ws.cell(row=row, column=5, value=opmerking)
+            row += 1
+
+        # Totals section
+        row += 1
+        ws.cell(row=row, column=1, value="TOTAAL VERMOGEN")
+        ws.cell(row=row, column=1).font = Font(bold=True)
+        ws.cell(row=row, column=2, value="=SUM(B5:B9)")
+        ws.cell(row=row, column=2).number_format = '€ #,##0'
+        ws.cell(row=row, column=2).font = Font(bold=True)
+        row += 1
+
+        ws.cell(row=row, column=1, value="Heffingsvrij vermogen")
+        ws.cell(row=row, column=2, value=57684)  # 2025 value
+        ws.cell(row=row, column=2).number_format = '€ #,##0'
+        ws.cell(row=row, column=5, value="Per persoon, fiscale partners: x2")
+        row += 1
+
+        ws.cell(row=row, column=1, value="Belastbaar vermogen")
+        ws.cell(row=row, column=1).font = Font(bold=True)
+        ws.cell(row=row, column=2, value=f"=MAX(0,B{row-2}-B{row-1})")
+        ws.cell(row=row, column=2).number_format = '€ #,##0'
+        ws.cell(row=row, column=2).font = Font(bold=True)
+        row += 2
+
+        # Fictief rendement totals
+        ws.cell(row=row, column=1, value="Totaal fictief rendement")
+        ws.cell(row=row, column=4, value="=SUM(D5:D9)")
+        ws.cell(row=row, column=4).number_format = '€ #,##0'
+        ws.cell(row=row, column=4).font = Font(bold=True)
+        row += 2
+
+        # Final tax calculation
+        add_section_header(ws, "BOX 3 BELASTING", row, 1, span=4)
+        row += 1
+
+        ws.cell(row=row, column=1, value="Fictief rendement")
+        ws.cell(row=row, column=2, value="=D14")
+        ws.cell(row=row, column=2).number_format = '€ #,##0'
+        row += 1
+
+        ws.cell(row=row, column=1, value="Belastingtarief")
+        ws.cell(row=row, column=2, value=0.36)
+        ws.cell(row=row, column=2).number_format = '0%'
+        row += 1
+
+        ws.cell(row=row, column=1, value="TE BETALEN BOX 3")
+        ws.cell(row=row, column=1).font = Font(bold=True, size=12)
+        ws.cell(row=row, column=2, value=f"=B{row-2}*B{row-1}")
+        ws.cell(row=row, column=2).number_format = '€ #,##0'
+        ws.cell(row=row, column=2).font = Font(bold=True, size=12, color="CC0000")
+
+        # Highlight
+        for col in range(1, 5):
+            cell = ws.cell(row=row, column=col)
+            cell.fill = PatternFill(start_color=COLORS["alert_bg"], end_color=COLORS["alert_bg"], fill_type="solid")
+
+        # Notes section
+        row += 3
+        ws.cell(row=row, column=1, value="LET OP:")
+        ws.cell(row=row, column=1).font = Font(bold=True)
+        row += 1
+        notes = [
+            "• Dit is een INDICATIEVE berekening, geen belastingadvies",
+            "• Eigen woning valt normaal in Box 1, niet Box 3",
+            "• Schulden hebben een drempel van €3.700 (2025)",
+            "• Fiscale partners kunnen heffingsvrij vermogen optellen (€115.368)",
+            "• Crypto wordt door de Belastingdienst als 'overige bezitting' gezien",
+            "• Peildatum is altijd 1 januari van het belastingjaar",
+        ]
+        for note in notes:
+            ws.cell(row=row, column=1, value=note)
+            ws.cell(row=row, column=1).font = Font(italic=True, color="666666")
+            row += 1
+
+        # Column widths
+        set_column_widths(ws, {
+            1: 30,  # Type
+            2: 18,  # Waarde
+            3: 12,  # Forfait
+            4: 18,  # Fictief
+            5: 40,  # Opmerking
+        })
+
+        freeze_panes(ws, row=5, col=1)
+
+    # =========================================================================
     # ALERTS Sheet
     # =========================================================================
 
@@ -1146,6 +1428,42 @@ De berekeningen en alerts werken dan nog steeds correct.
 
         # Conditional formatting for status
         add_status_conditional_formatting(ws, "G26:G26")
+
+        # =====================================================================
+        # SECTION 9: CASHFLOW
+        # =====================================================================
+        section_row = 29
+        add_section_header(ws, "CASHFLOW", section_row, 6, span=3)
+
+        row = section_row + 1
+        ws.cell(row=row, column=6, value="Inkomsten/maand")
+        ws.cell(row=row, column=7, value="=SUM(tblInkomsten[Netto/maand])")
+        ws.cell(row=row, column=7).number_format = '€ #,##0'
+        ws.cell(row=row, column=7).font = Font(color="006600")
+        row += 1
+
+        ws.cell(row=row, column=6, value="Uitgaven/maand")
+        ws.cell(row=row, column=7, value="=SUM(tblMaandlasten[Bedrag(EUR)])")
+        ws.cell(row=row, column=7).number_format = '€ #,##0'
+        ws.cell(row=row, column=7).font = Font(color="CC0000")
+        row += 1
+
+        ws.cell(row=row, column=6, value="Netto Cashflow")
+        ws.cell(row=row, column=6).font = Font(bold=True)
+        ws.cell(row=row, column=7, value="=G30-G31")
+        ws.cell(row=row, column=7).number_format = '€ #,##0'
+        ws.cell(row=row, column=7).font = Font(bold=True)
+        row += 1
+
+        ws.cell(row=row, column=6, value="Spaarquote")
+        ws.cell(row=row, column=7, value="=IF(G30=0,0,G32/G30)")
+        ws.cell(row=row, column=7).number_format = '0%'
+        row += 2
+
+        ws.cell(row=row, column=6, value="Box 3 belasting")
+        ws.cell(row=row, column=7, value="=Belastingen!B19")
+        ws.cell(row=row, column=7).number_format = '€ #,##0'
+        ws.cell(row=row, column=7).font = Font(color="CC0000")
 
         # =====================================================================
         # COLUMN WIDTHS & FORMATTING

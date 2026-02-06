@@ -123,6 +123,9 @@ SHEETS_CONFIG = [
     {"name": "Leningen", "order": 8, "type": "loans"},
     {"name": "BTC als Onderpand", "order": 9, "type": "collateral_view"},
     {"name": "Cash & Overig", "order": 10, "type": "cash"},
+    {"name": "Inkomsten", "order": 11, "type": "income"},
+    {"name": "Maandlasten", "order": 12, "type": "expenses"},
+    {"name": "Belastingen", "order": 13, "type": "taxes"},
 ]
 
 # =============================================================================
@@ -231,6 +234,45 @@ TABLE_DEFINITIONS = {
             "SuggestedAction",
         ],
         "start_row": 2,
+        "start_col": 1,
+    },
+    "tblInkomsten": {
+        "sheet": "Inkomsten",
+        "columns": [
+            "Bron",
+            "Omschrijving",
+            "Bruto/maand",
+            "Netto/maand",
+            "Type",
+            "Frequentie",
+            "Opmerking",
+        ],
+        "start_row": 2,
+        "start_col": 1,
+    },
+    "tblMaandlasten": {
+        "sheet": "Maandlasten",
+        "columns": [
+            "Categorie",
+            "Omschrijving",
+            "Bedrag(EUR)",
+            "Frequentie",
+            "Jaarlijks(EUR)",
+            "Opmerking",
+        ],
+        "start_row": 2,
+        "start_col": 1,
+    },
+    "tblBelastingVermogen": {
+        "sheet": "Belastingen",
+        "columns": [
+            "Vermogenstype",
+            "Waarde 1 jan",
+            "Forfaitair %",
+            "Fictief rendement",
+            "Opmerking",
+        ],
+        "start_row": 4,
         "start_col": 1,
     },
 }
@@ -372,6 +414,142 @@ SAMPLE_DATA = {
             "Notes": "0.25 BTC als onderpand",
         },
     ],
+    "tblInkomsten": [
+        {
+            "Bron": "Salaris",
+            "Omschrijving": "Werkgever",
+            "Bruto/maand": 5500,
+            "Netto/maand": 3800,
+            "Type": "Vast",
+            "Frequentie": "Maandelijks",
+            "Opmerking": "",
+        },
+        {
+            "Bron": "Huurinkomsten",
+            "Omschrijving": "Appartement Utrecht",
+            "Bruto/maand": 1400,
+            "Netto/maand": 1200,
+            "Type": "Vastgoed",
+            "Frequentie": "Maandelijks",
+            "Opmerking": "Na kosten",
+        },
+        {
+            "Bron": "Dividend",
+            "Omschrijving": "ETF portfolio",
+            "Bruto/maand": 50,
+            "Netto/maand": 50,
+            "Type": "Variabel",
+            "Frequentie": "Kwartaal",
+            "Opmerking": "Gemiddeld per maand",
+        },
+    ],
+    "tblMaandlasten": [
+        {
+            "Categorie": "Wonen",
+            "Omschrijving": "Hypotheek",
+            "Bedrag(EUR)": 1500,
+            "Frequentie": "Maandelijks",
+            "Opmerking": "",
+        },
+        {
+            "Categorie": "Wonen",
+            "Omschrijving": "Energie (gas/elektra)",
+            "Bedrag(EUR)": 200,
+            "Frequentie": "Maandelijks",
+            "Opmerking": "",
+        },
+        {
+            "Categorie": "Wonen",
+            "Omschrijving": "Water",
+            "Bedrag(EUR)": 25,
+            "Frequentie": "Maandelijks",
+            "Opmerking": "",
+        },
+        {
+            "Categorie": "Wonen",
+            "Omschrijving": "Gemeentebelasting",
+            "Bedrag(EUR)": 60,
+            "Frequentie": "Maandelijks",
+            "Opmerking": "OZB + afval + riool",
+        },
+        {
+            "Categorie": "Verzekering",
+            "Omschrijving": "Zorgverzekering",
+            "Bedrag(EUR)": 140,
+            "Frequentie": "Maandelijks",
+            "Opmerking": "",
+        },
+        {
+            "Categorie": "Verzekering",
+            "Omschrijving": "Inboedel + opstal",
+            "Bedrag(EUR)": 35,
+            "Frequentie": "Maandelijks",
+            "Opmerking": "",
+        },
+        {
+            "Categorie": "Verzekering",
+            "Omschrijving": "Auto (WA + casco)",
+            "Bedrag(EUR)": 80,
+            "Frequentie": "Maandelijks",
+            "Opmerking": "",
+        },
+        {
+            "Categorie": "Vervoer",
+            "Omschrijving": "Brandstof",
+            "Bedrag(EUR)": 150,
+            "Frequentie": "Maandelijks",
+            "Opmerking": "",
+        },
+        {
+            "Categorie": "Vervoer",
+            "Omschrijving": "OV abonnement",
+            "Bedrag(EUR)": 100,
+            "Frequentie": "Maandelijks",
+            "Opmerking": "",
+        },
+        {
+            "Categorie": "Abonnement",
+            "Omschrijving": "Internet + TV",
+            "Bedrag(EUR)": 60,
+            "Frequentie": "Maandelijks",
+            "Opmerking": "",
+        },
+        {
+            "Categorie": "Abonnement",
+            "Omschrijving": "Telefoon",
+            "Bedrag(EUR)": 30,
+            "Frequentie": "Maandelijks",
+            "Opmerking": "",
+        },
+        {
+            "Categorie": "Abonnement",
+            "Omschrijving": "Streaming (Netflix etc)",
+            "Bedrag(EUR)": 25,
+            "Frequentie": "Maandelijks",
+            "Opmerking": "",
+        },
+        {
+            "Categorie": "Levensonderhoud",
+            "Omschrijving": "Boodschappen",
+            "Bedrag(EUR)": 500,
+            "Frequentie": "Maandelijks",
+            "Opmerking": "",
+        },
+        {
+            "Categorie": "Levensonderhoud",
+            "Omschrijving": "Kleding",
+            "Bedrag(EUR)": 100,
+            "Frequentie": "Maandelijks",
+            "Opmerking": "Gemiddeld",
+        },
+        {
+            "Categorie": "Overig",
+            "Omschrijving": "Reservering onvoorzien",
+            "Bedrag(EUR)": 200,
+            "Frequentie": "Maandelijks",
+            "Opmerking": "",
+        },
+    ],
 }
 
 # =============================================================================
@@ -437,4 +615,27 @@ DATA_VALIDATIONS = {
     "vastgoed_type": ["Eigen woning", "Verhuur", "Vakantiewoning", "Overig"],
     "cash_type": ["Betaalrekening", "Spaarrekening", "Belegging", "Crypto Exchange", "Overig"],
     "severity": ["INFO", "ALERT", "RISK", "CRITICAL"],
+    "income_type": ["Vast", "Variabel", "Vastgoed", "Belegging", "Overig"],
+    "frequentie": ["Maandelijks", "Kwartaal", "Jaarlijks", "Eenmalig"],
+    "lasten_categorie": ["Wonen", "Verzekering", "Vervoer", "Abonnement", "Levensonderhoud", "Belasting", "Overig"],
+}
+
+# =============================================================================
+# BOX 3 BELASTING TARIEVEN (Nederland 2024/2025)
+# =============================================================================
+
+BOX3_TARIEVEN_2024 = {
+    "belasting_percentage": 0.36,  # 36% over fictief rendement
+    "heffingsvrij_vermogen": 57000,  # per persoon (2024)
+    "forfaitair_spaargeld": 0.0092,  # 0.92% voor spaargeld (2024)
+    "forfaitair_beleggingen": 0.0633,  # 6.33% voor beleggingen (2024)
+    "forfaitair_schulden": 0.0257,  # 2.57% aftrek voor schulden (2024)
+}
+
+BOX3_TARIEVEN_2025 = {
+    "belasting_percentage": 0.36,  # 36% over fictief rendement
+    "heffingsvrij_vermogen": 57684,  # per persoon (2025, verwacht)
+    "forfaitair_spaargeld": 0.0092,  # 0.92% voor spaargeld (voorlopig)
+    "forfaitair_beleggingen": 0.0617,  # 6.17% voor beleggingen (2025)
+    "forfaitair_schulden": 0.0257,  # 2.57% aftrek voor schulden
 }
